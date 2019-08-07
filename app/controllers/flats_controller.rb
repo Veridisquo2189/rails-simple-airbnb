@@ -3,13 +3,43 @@ class FlatsController < ApplicationController
     @flats = Flat.all
   end
 
+  def show
+    @flat = Flat.find(params[:id])
+  end
+
   def new
     @flat = Flat.new
   end
 
+  def edit
+    @flat = Flat.find(params[:id])
+  end
+
   def create
     @flat = Flat.new(params_flat)
-    @flat.save
+    if @flat.save
+      redirect_to flats_path
+    else
+      render :new
+    end
+  end
+
+  def search
+    @flat = Flat.where(params_flat: @flat[:params])
+  end
+
+  def update
+    @flat = Flat.find(params[:id])
+    if @flat.update(params_flat)
+      redirect_to flat_path(@flat)
+    else
+      render :edit
+    end
+  end
+
+  def destroy
+    @flat = Flat.find(params[:id])
+    @flat.destroy
     redirect_to flats_path
   end
 
